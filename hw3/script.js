@@ -5,7 +5,7 @@ var allWorldCupData;
 /**
  * Render and update the bar chart based on the selection of the data type in the drop-down box
  */
-function updateBarChart() {
+function updateBarChart(selectedDimension) {
 
     var svgBounds = d3.select("#barChart").node().getBoundingClientRect(),
         xAxisWidth = 100,
@@ -23,6 +23,7 @@ function updateBarChart() {
     // Create the bars (hint: use #bars)
 
 
+
     // ******* TODO: PART II *******
 
     // Implement how the bars respond to click events
@@ -31,6 +32,7 @@ function updateBarChart() {
 
     // Call the necessary update functions for when a user clicks on a bar.
     // Note: think about what you want to update when a different bar is selected.
+
 
 }
 
@@ -45,8 +47,6 @@ function chooseData() {
     // ******* TODO: PART I *******
     //Changed the selected data when a user selects a different
     // menu item from the drop down.
-
-    //Hint: Dont'forget to make the necessary function call to update the BarChart as well!
 
 }
 
@@ -88,6 +88,7 @@ function drawMap(world) {
 
     // Make sure and give your paths the appropriate class (see the .css selectors at
     // the top of the provided html file)
+
 
 }
 
@@ -132,7 +133,6 @@ function updateMap(worldcupData) {
     //We strongly suggest using classes to style the selected countries.
 
 
-  
 
 }
 
@@ -168,14 +168,10 @@ d3.csv("data/fifa-world-cup.csv", function (error, csv) {
         d.teams_iso = d3.csvParse(d.TEAM_LIST).columns;
         d.teams_names = d3.csvParse(d.TEAM_NAMES).columns;
 
-        //Notice how we start by assigning attendance to the selected data field
-        d.selected_data = d.attendance;
-
     });
 
     // Store csv data in a global variable
     allWorldCupData = csv;
-
     // Draw the Bar chart for the first time
-    updateBarChart();
+    updateBarChart('attendance');
 });
