@@ -4,6 +4,8 @@ var allWorldCupData;
 
 /**
  * Render and update the bar chart based on the selection of the data type in the drop-down box
+ *
+ * @param selectedDimension a string specifying which dimension to render in the bar chart
  */
 function updateBarChart(selectedDimension) {
 
@@ -52,6 +54,7 @@ function chooseData() {
 
 /**
  * Update the info panel to show info about the currently selected world cup
+ *
  * @param oneWorldCup the currently selected world cup
  */
 function updateInfo(oneWorldCup) {
@@ -68,7 +71,8 @@ function updateInfo(oneWorldCup) {
 }
 
 /**
- * Renders the actual map
+ * Renders and updated the map and the highlights on top of it
+ *
  * @param the json data with the shape of all countries
  */
 function drawMap(world) {
