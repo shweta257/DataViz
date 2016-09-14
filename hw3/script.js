@@ -80,7 +80,7 @@ function drawMap(world) {
     //(note that projection is global!
     // updateMap() will need it to add the winner/runner_up markers.)
 
-    projection = d3.geoConicConformal().scale(200).translate([500, 450]);
+    projection = d3.geoConicConformal().scale(150).translate([400, 350]);
 
     // ******* TODO: PART IV *******
 
