@@ -57,7 +57,7 @@ And you can view the page at [http://localhost:8080](http://localhost:8080)
 
 ## About the data
 
-We have taken care of the data loading for you in the homework skeleton. We're reading in the data from the `fifa-world-cup.csv` file and the map from the `world.json` GeoJSON file. 
+We have taken care of the data loading for you in the homework skeleton. We're reading in the data from the `fifa-world-cup.csv` file and the map from the `world.json` TopoJSON file. 
 
 The data (the global `allWorldCupData` variable) contains all the attributes you will need.
 To better understand the structure of the data it's a good idea to look at the files and log the data objects to the console. Also take a closer look at the call to `d3.csv()` in the provided `script.js` file.
