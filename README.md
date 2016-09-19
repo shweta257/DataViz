@@ -12,5 +12,5 @@ git clone https://github.com/dataviscourse/2016-dataviscourse-homework
 To receive updates and add newly released homeworks update youre repository by cd-ing into the `2016-dataviscourse-homework` directory and running:
 
 ```
-git update
+git pull
 ```
