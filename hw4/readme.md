@@ -285,14 +285,18 @@ We'l start off by implementing createTree(treeData) that takes as an argument th
 createTree(treeData) should use the d3.tree() layout to generate the tree. Note that before populating the tree with the treeData input argument you will need to use the d3.stratify()
 operator to create the parent/node relationship between the games. The syntax for d3.stratify() is as follows:
 
+
+```javascript
 var root = d3.stratify()
     .id(function(d) { return d.name; })
     .parentId(function(d) { return d.parent; })
     (data);
+```
+
+
+
     
 Where .id is unique identifier for each node and .parentId indicates what field contains the parent Node to that element. 
-
-Recall how we advised you to create a unique id for each data object in fifa-tree.csv? The time has finally come to use that id. 
 
 Once you have created the tree, color the nodes for winning teams in red and losing teams in blue as in the figure below. 
 
