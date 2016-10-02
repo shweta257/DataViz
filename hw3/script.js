@@ -179,7 +179,7 @@ function drawMap(world) {
     // updateMap() will need it to add the winner/runner_up markers.)
 
     projection = d3.geoConicConformal().scale(150).translate([400, 350]);
-    console.log(world);
+    //console.log(world);
     // ******* TODO: PART IV *******
 
     // Draw the background (country outlines; hint: use #map)
@@ -300,7 +300,7 @@ function updateMap(worldcupData) {
         .classed("host", true);
 
     worldcupData.teams_iso.forEach(function (j) {
-        console.log(j);
+       // console.log(j);
         d3.select("#map")
             .select("#" + j )
             .classed("team", true);
@@ -344,6 +344,7 @@ d3.csv("data/fifa-world-cup.csv", function (error, csv) {
 
     // Store csv data in a global variable
     allWorldCupData = csv;
+    console.log(allWorldCupData);
     // Draw the Bar chart for the first time
     updateBarChart('attendance');
 });
