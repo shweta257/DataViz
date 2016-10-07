@@ -19,7 +19,7 @@ The **shift chart** (extra credit) visualizes the percentage shift in the outcom
 
 The year chart will be your pivot for interaction as it controls the information being displayed by the electoral vote chart, the vote percentage chart and the tile chart. Also, brushing on your electoral chart should filter the information being displayed by the shift chart.
 
-Your final visualization should look roughly like this: 
+Your final visualization should look roughly like this (tooltip and brush are displayed to show interaction): 
 
 ![Overview](figs/overview.png)
 
@@ -38,22 +38,23 @@ Your project structure looks like this:
             public/
                 css/
                    style.css
-                js/ # you'll be doing most of your work here
+                js/ # you'll be doing all of your work here
                    main.js
                    yearChart.js
                    electoralVoteChart.js
                    votePercentageChart.js
                    tileChart.js
                    shiftChart.js
-        assets
         data/
           yearwiseWinner.csv
           Year_Timeline_1940.csv
           Year_Timeline_1944.csv 
 	       # more csv files for different years here
-        images/
+        figs/
         	# figures / videos used in the description
-        	# irrelevant for the project        	   
+        	# irrelevant for the project
+        bower_components/ #contains local copies of d3 and d3-tip 	
+        	        	   
 
 Remember, to be able to access the data files with javascript, you will need to be *serving* the hw5 directory, not just opening the HTML file in a browser. If your development environment doesn't already launch a server for you, you can start one with:
 
