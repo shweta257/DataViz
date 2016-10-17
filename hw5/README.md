@@ -92,7 +92,7 @@ Below the circles for each year, add a text element that displays the value of t
 
 On selection (click) of a circle, trigger an event that populates the electoral votes chart, vote percentage chart and tile chart with the right data. This is done by making a call to the update methods of these visualizations. Based on the year that is selected, you should load the appropriate ``year_timeline_XXX.csv`` file and populate the data. We have also created a global color scale  `colorScale` based on the margin of victory for Republican and Democrat parties, to be used consistently across all your visualizations. You will be sending both, the data and the color scale as parameters to the update methods of appropriate charts.
 
-When you're done with this part, your year chart should look like this: 
+When you're done with this part, your year chart should look like this (in this example 1968 is selected and styled appropriately): 
 ![yearChart](figs/yearChart.png)
 
 
