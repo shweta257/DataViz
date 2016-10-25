@@ -1,0 +1,17 @@
+The design_1 is good to analyze the political trend of states with time.
+  1. Co-ordinate chart is created in this design with X-axis as States (All 50), with parallel axis for each state represent legend to show RD_Difference for each party in each state changed marked from -60.0 to +60.0 as tileChart . The Y-axis is to represent year from 1940-2012.
+  2. Lines represent the party RD_Difference to show the shift with time for a particular state vertically(as year is represented in Y-axis)
+
+
+The design_2 is good because it's called "Macro design" to analyze the visualization individually for each state.
+   1. Each state will have its own co-ordinate axis graph, with x-axis as year and Y-axis ranging from 0 to total number of seats.
+   2. There will be three lines, each will represent D_Total_EV, R_Total_EV and I_Total_EV which will be color-coded in blue, red and green respectively.
+   3. This will tell us clearly how many seats have won or lost from one party to another over years for a particular state.
+
+
+Advantage of Design_1: this will tell us in a single graph which state has lost to another party and which party rules in this state.
+    Although, the graph will be a little cluttered and the length of X-axis will be huge as it will be of size approximately #no-of-states*size_of_legend, therefore, we will be having this graph scrolled in X-axis.
+
+Design_2 overcomes the complexity of design_1 and will allow us to clearly see how the state political inclination has changed in the past.
+    but it will be taking lots of space in page and there will be many graphs( exactly equal to the #no-of-states), Also, this design won't give us the comparison between the states. For that, we need to see all the state graphs.
+

@@ -26,6 +26,16 @@ ShiftChart.prototype.update = function(selectedStates){
     // ******* TODO: PART V *******
     //Display the names of selected states in a list
 
+//    console.log(selectedStates);
+    var li = d3.select("#shiftChart").selectAll('li').data(selectedStates);
+
+    li.exit().remove();
+
+    li = li.enter()
+        .append('li').merge(li);
+
+    li.html(String);
+
     //******** TODO: PART VI*******
     //Use the shift data corresponding to the selected years and sketch a visualization
     //that encodes the shift information

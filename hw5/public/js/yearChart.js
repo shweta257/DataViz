@@ -74,11 +74,85 @@ YearChart.prototype.update = function(){
         .domain(domain).range(range);
 
     // ******* TODO: PART I *******
+    //console.log(self.electionWinners);
 
     // Create the chart by adding circle elements representing each election year
     //The circles should be colored based on the winning party for that year
     //HINT: Use the .yearChart class to style your circle elements
     //HINT: Use the chooseClass method to choose the color corresponding to the winning party.
+
+    var xScale = d3.scaleBand()
+        .domain(self.electionWinners.map(function (d) {
+           // console.log(d);
+            return d.YEAR;
+        }))
+        .range([0,self.svgWidth])
+        .padding(20);
+        // .paddingInner(30)
+        // .paddingOuter(100);
+    //.padding(.1);
+
+
+    self.svg.append("path")
+        .attr("class","line")
+        .style("stroke-dasharray",("3,3"))
+        .style("stroke","black")
+        .attr("d", " M 0 "+ self.svgHeight/2+ " L " + self.svgWidth +" " +self.svgHeight/2);
+
+    var svgElement = self.svg.selectAll("g")
+        .data(self.electionWinners);
+    var groupSvg = svgElement.enter()
+                .append("g");
+    svgElement.exit().remove();
+
+    groupSvg.attr("transform", function (d,i) {
+        return "translate("+(xScale.step()*i+60) + ","+ self.svgHeight/2+")";
+    })
+
+    groupSvg.append("circle")
+        .attr("r", 10)
+        .attr("class",function(d,i){
+            return self.chooseClass(d.PARTY);
+        })
+        .on("click",function (d) {
+            self.svg.selectAll("circle")
+                .classed("selected",false);
+            d3.select(this).classed("selected",true);
+//call update methode
+            var filename ="data/Year_Timeline_"+d.YEAR+".csv";
+            console.log(filename);
+            d3.csv(filename , function (error, csvData) {
+               // console.log(csvData);
+                self.electoralVoteChart.update(csvData, self.colorScale);
+                self.votePercentageChart.update(csvData);
+                self.tileChart.update(csvData, self.colorScale);
+            });
+        })
+        .on("mouseover",function (d) {
+            self.svg.selectAll("circle")
+                .classed("highlighted",false);
+            d3.select(this).classed("highlighted",true);
+
+        })
+        .on("mouseout",function (d) {
+            self.svg.selectAll("circle")
+                .classed("highlighted",false);
+            //d3.select(this).classed("highlighted",true);
+
+        });
+
+    groupSvg.append("text")
+        .text(function (d) {
+            return d.YEAR;
+        })
+        .attr("dx", -20)
+        .attr("dy", 25)
+        .attr("class","yearText");
+
+    groupSvg.exit().remove();
+
+    //var yearChart = d3.select("#year-chart").data(self);
+    //var yearCircle = yearChart.selectAll("circle");
 
     //Append text information of each year right below the corresponding circle
     //HINT: Use .yeartext class to style your text elements

@@ -56,7 +56,7 @@ VotePercentageChart.prototype.tooltip_render = function (tooltip_data) {
     tooltip_data.result.forEach(function(row){
         text += "<li class = " + self.chooseClass(row.party)+ ">" + row.nominee+":\t\t"+row.votecount+"("+row.percentage+"%)" + "</li>"
     });
-
+   // console.log(text);
     return text;
 }
 
@@ -70,24 +70,56 @@ VotePercentageChart.prototype.update = function(electionResult){
 
     //for reference:https://github.com/Caged/d3-tip
     //Use this tool tip element to handle any hover over the chart
+
+    var sortFirstOrder = ['I', 'D', 'R'];
+    var electoralVoteData = d3.nest()
+        .key(function (d) {
+            return d.State_Winner;
+        })
+        .sortKeys(function(a,b) { return sortFirstOrder.indexOf(a) - sortFirstOrder.indexOf(b); })
+        .entries(electionResult);
+
+   // console.log(electoralVoteData);
+
+    var presentI = 0;
+    electoralVoteData.forEach(function(d){
+        if(d.key == "I")
+            presentI = 1;
+    });
+
+    //console.log(presentI);
     tip = d3.tip().attr('class', 'd3-tip')
         .direction('s')
         .offset(function() {
             return [0,0];
         })
         .html(function(d) {
-            /* populate data in the following format
-             * tooltip_data = {
-             * "result":[
-             * {"nominee": D_Nominee_prop,"votecount": D_Votes_Total,"percentage": D_PopularPercentage,"party":"D"} ,
-             * {"nominee": R_Nominee_prop,"votecount": R_Votes_Total,"percentage": R_PopularPercentage,"party":"R"} ,
-             * {"nominee": I_Nominee_prop,"votecount": I_Votes_Total,"percentage": I_PopularPercentage,"party":"I"}
-             * ]
-             * }
-             * pass this as an argument to the tooltip_render function then,
+            //console.log("tooltip "+d.values[0].State_Winner);
+            /* populate data in the following format*/
+            if(presentI != 1){
+                var tooltip_data =  {
+                    "result":[
+                        {"nominee": d.values[0].D_Nominee_prop,"votecount": d.values[0].D_Votes_Total,"percentage": d.values[0].D_PopularPercentage,"party":"D"},
+                        {"nominee": d.values[0].R_Nominee_prop,"votecount": d.values[0].R_Votes_Total,"percentage": d.values[0].R_PopularPercentage,"party":"R"}
+
+                    ]
+                };
+            }else{
+                var tooltip_data = {
+                    "result":[
+                        {"nominee": d.values[0].I_Nominee_prop,"votecount": d.values[0].I_Votes_Total,"percentage": d.values[0].I_PopularPercentage,"party":"I"},
+                        {"nominee": d.values[0].D_Nominee_prop,"votecount": d.values[0].D_Votes_Total,"percentage": d.values[0].D_PopularPercentage,"party":"D"},
+                        {"nominee": d.values[0].R_Nominee_prop,"votecount": d.values[0].R_Votes_Total,"percentage": d.values[0].R_PopularPercentage,"party":"R"}
+
+                    ]
+                }   ;
+            }
+
+            /* pass this as an argument to the tooltip_render function then,
              * return the HTML content returned from that method.
              * */
-            return ;
+          //  console.log("tool-data "+tooltip_data);
+            return self.tooltip_render(tooltip_data);
         });
 
 
@@ -96,6 +128,138 @@ VotePercentageChart.prototype.update = function(electionResult){
     //Create the stacked bar chart.
     //Use the global color scale to color code the rectangles.
     //HINT: Use .votesPercentage class to style your bars.
+
+    var widthScale = d3.scaleLinear().domain([0,100]).rangeRound([0,self.svgWidth]);
+
+
+    var barGroupSvg = self.svg.selectAll("g").data(electoralVoteData);
+
+    barGroupSvg.exit().remove();
+    barGroupSvg = barGroupSvg.enter().append("g").merge(barGroupSvg);
+
+    barGroupSvg.call(tip);
+    barGroupSvg.on("mouseover",tip.show)
+        .on("mouseout", tip.hide);
+
+    var rectSvg =barGroupSvg.selectAll("rect").data(function(d){return [d]});
+    rectSvg.exit().remove();
+    //ectSvg
+    rectSvg = rectSvg.enter().append("rect").merge(rectSvg);
+    rectSvg.attr("y", self.svgHeight/2)
+        .attr("height", 30)
+        .attr("width",function(d){
+           // console.log(d);
+            if(d.key == "I"){
+                return widthScale(parseFloat(d.values[0].I_PopularPercentage));
+            }else if(d.key == "D"){
+                return widthScale(parseFloat(d.values[0].D_PopularPercentage));
+            } else if(d.key == "R"){
+                return widthScale(parseFloat(d.values[0].R_PopularPercentage));
+            }
+        })
+        .attr("x",function(d,i){
+            var w = 0;
+            if(d.key == "I"){
+                presentI = 1;
+                return 0;
+            }else if(d.key == "D"){
+                if(presentI == 1)
+                    return widthScale(parseFloat(d.values[0].I_PopularPercentage));
+                else
+                    return 0;
+            }else if(d.key == "R"){
+                if(presentI == 1)
+                    return widthScale(parseFloat(d.values[0].I_PopularPercentage)) + widthScale(parseFloat(d.values[0].D_PopularPercentage));
+                else
+                    return widthScale(parseFloat(d.values[0].D_PopularPercentage));
+            }
+        })
+        .attr("class",function(d){
+            return "votesPercentage "+self.chooseClass(d.key);
+        });
+
+    var textGroupSvg =barGroupSvg.selectAll("text").data(function(d){return [d]});
+    textGroupSvg.exit().remove();
+
+    textGroupSvg = textGroupSvg.enter().append("text").merge(textGroupSvg);
+    textGroupSvg.attr("y", self.svgHeight/2-10)
+        .attr("class",function(d){
+            return "votesPercentageText "+self.chooseClass(d.key);
+        })
+        .text(function(d) {
+           // console.log(d);
+            if (d.key == "I") {
+               // console.log(d.values[0].I_PopularPercentage);
+                return d.values[0].I_PopularPercentage;
+            } else if (d.key == "D"){
+                return d.values[0].D_PopularPercentage;
+            }else if(d.key == "R")
+                return d.values[0].R_PopularPercentage;
+        })
+        .attr("x",function(d,i) {
+            if (d.key == "R") {
+                return self.svgWidth;
+            } else if (d.key== "I") {
+                presentI = 1;
+                return 0;
+            }else if (d.key == "D") {
+                if(presentI == 1){
+                    return widthScale(parseFloat(d.values[0].I_PopularPercentage));
+                }else{
+                    return 0;
+                }
+            }
+        });
+
+    var svgtext = self.svg.selectAll("#text").data(electoralVoteData);
+    svgtext.exit().remove();
+
+    svgtext = svgtext.enter()
+        .append("text").merge(svgtext);
+
+    svgtext.attr("id","text")
+        .attr("y", self.svgHeight/2-50)
+        .attr("id","text")
+        .attr("class",function(d){
+            return "votesPercentageText "+self.chooseClass(d.values[0].State_Winner);
+        })
+        .text(function(d){
+            if (d.key == "I") {
+                //console.log(d.values[0].I_Nominee);
+                return d.values[0].I_Nominee;
+            } else if (d.key == "D"){
+                return d.values[0].D_Nominee;
+            }else if(d.key == "R")
+                return d.values[0].R_Nominee;
+            //return d.values[0].D_Nominee;
+        })
+        .attr("x",function(d,i) {
+            if (d.key == "R") {
+                return self.svgWidth;
+            } else if (d.key == "I") {
+                return 10;
+            }else if (d.key == "D") {
+                if(presentI == 1){
+                    return widthScale(2* parseFloat(d.values[0].I_PopularPercentage));
+                }else{
+                    return 0;
+                }
+            }
+        });
+
+
+    self.svg.append("rect")
+        .attr("x",self.svgWidth/2)
+        .attr("y",self.svgHeight/2 - 10)
+        .attr("width",4)
+        .attr("height",50)
+        .attr("class","middlePoint");
+
+    self.svg.append("text")
+        .attr("class","votesPercentageNote")
+        .attr("x",self.svgWidth/2)
+        .attr("y",self.svgHeight/2 - 10)
+        .text("Popular Vote (50%)");
 
     //Display the total percentage of votes won by each party
     //on top of the corresponding groups of bars.
